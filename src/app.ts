@@ -1,3 +1,3 @@
-import instagram from './insta/insta';
+import instagram from "./insta/insta";
 
-instagram("hinata");
+instagram("naruto");

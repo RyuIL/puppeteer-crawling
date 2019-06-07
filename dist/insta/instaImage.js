@@ -40,15 +40,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var puppeteer_1 = __importDefault(require("puppeteer"));
+var scroll_1 = require("./scroll");
+var fs_1 = __importDefault(require("fs"));
 var instagram = function (tag) { return __awaiter(_this, void 0, void 0, function () {
-    var url, browser, page, startTime, data, i, insertData, endTime, e_1;
+    var url, browser, page, items, result, path, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 url = "https://www.instagram.com/explore/tags/" + tag + "/?hl=ko";
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 16, , 17]);
+                _a.trys.push([1, 9, , 10]);
                 return [4 /*yield*/, puppeteer_1.default.launch({ headless: false })];
             case 2:
                 browser = _a.sent();
@@ -62,62 +64,26 @@ var instagram = function (tag) { return __awaiter(_this, void 0, void 0, functio
                 return [4 /*yield*/, page.waitForSelector("span.g47SY ")];
             case 5:
                 _a.sent();
-                //#react-root > section > main > article > div.EZdmt > div > div > div:nth-child(1) > div:nth-child(1) > a > div > div._9AhH0
-                return [4 /*yield*/, page.click('div.EZdmt > div > div > div:nth-child(1) > div:nth-child(1)')];
+                return [4 /*yield*/, scroll_1.scrapeInfiniteScrollItems(page, scroll_1.extractItems, 100)];
             case 6:
-                //#react-root > section > main > article > div.EZdmt > div > div > div:nth-child(1) > div:nth-child(1) > a > div > div._9AhH0
-                _a.sent();
-                return [4 /*yield*/, page.waitForSelector('div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a')];
+                items = _a.sent();
+                result = [{ tag: tag, img: items }];
+                path = "./src/insta/results/" + tag + ".json";
+                fs_1.default.writeFileSync(path, JSON.stringify(result), "utf8");
+                return [4 /*yield*/, page.close()];
             case 7:
                 _a.sent();
-                startTime = new Date().getTime();
-                data = void 0;
-                i = 0;
-                _a.label = 8;
-            case 8:
-                if (!(i < 20)) return [3 /*break*/, 13];
-                return [4 /*yield*/, page.evaluate(function () {
-                        var auth = document.querySelector("a.FPmhX notranslate nJAzx");
-                        var content = document.querySelector("div.C4VMK > span");
-                        console.log(auth.textContent);
-                        console.log(content.textContent);
-                        //body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > div.EtaWk > ul > li > div > div > div.C4VMK > span
-                    })];
-            case 9:
-                insertData = _a.sent();
-                return [4 /*yield*/, page.keyboard.press('ArrowRight')];
-            case 10:
-                _a.sent();
-                return [4 /*yield*/, page.waitForSelector('div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a')];
-            case 11:
-                _a.sent();
-                _a.label = 12;
-            case 12:
-                i++;
-                return [3 /*break*/, 8];
-            case 13:
-                endTime = new Date().getTime();
-                console.log(endTime - startTime);
-                // let result = [{ tag: tag, img: items }];
-                // let path = "./src/insta/results/"+tag+".json";
-                // fs.writeFileSync(path, JSON.stringify(result), "utf8");
-                return [4 /*yield*/, page.close()];
-            case 14:
-                // let result = [{ tag: tag, img: items }];
-                // let path = "./src/insta/results/"+tag+".json";
-                // fs.writeFileSync(path, JSON.stringify(result), "utf8");
-                _a.sent();
                 return [4 /*yield*/, browser.close()];
-            case 15:
+            case 8:
                 _a.sent();
-                return [3 /*break*/, 17];
-            case 16:
+                return [3 /*break*/, 10];
+            case 9:
                 e_1 = _a.sent();
                 console.log(e_1);
-                return [3 /*break*/, 17];
-            case 17: return [2 /*return*/];
+                return [3 /*break*/, 10];
+            case 10: return [2 /*return*/];
         }
     });
 }); };
 exports.default = instagram;
-//# sourceMappingURL=insta.js.map
+//# sourceMappingURL=instaImage.js.map
