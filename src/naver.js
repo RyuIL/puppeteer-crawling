@@ -1,6 +1,12 @@
 const fs = require("fs");
 const pupperteer = require("puppeteer");
 
+
+// 대기하는 방법
+// await page.waitFor(() => !!document.querySelector('.foo'), {
+//   hidden: true,
+// });
+
 const crawler = async url => {
   try {
     const browser = await pupperteer.launch({ headless: true });

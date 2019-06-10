@@ -5,39 +5,45 @@ import fs from 'fs';
 const instagram = async (tag:string) => {
     const url : string = "https://www.instagram.com/explore/tags/"+tag+"/?hl=ko";
     try{
-        const browser = await puppeteer.launch({ headless: false });
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         page.setViewport({ width: 1280, height: 926 });
 
         await page.goto(url);
         await page.waitForSelector("span.g47SY ");
 
-        //#react-root > section > main > article > div.EZdmt > div > div > div:nth-child(1) > div:nth-child(1) > a > div > div._9AhH0
-        
         await page.click('div.EZdmt > div > div > div:nth-child(1) > div:nth-child(1)');
-        await page.waitForSelector('div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a');
+        await page.waitForSelector('div._2dDPU.vCf6V > div.zZYga > div > article > header > div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a');
 
-        //body > div._2dDPU.vCf6V > div.zZYga > div > article > header > div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a
-        const startTime : number = new Date().getTime();
+        const startTime : number = await new Date().getTime();
 
-        let data : Array<Object>;
+        let data : Array<Object> = await [];
+        for (let i = 0; i < 100; i++) {
+            let result : Object = await page.evaluate(() => {
+                const auth : any = document.querySelector("div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a");
+                const content : any = document.querySelector('div.eo2As > div.EtaWk > ul > li > div > div > div.C4VMK');
+                const total : Object = {
+                    "auth" : auth ? auth.innerHTML : '',
+                    "content" : content ? content.textContent : ''
+                };
+                
+                return total;
+            })    
+            await console.log(i);
 
-        for (let i = 0; i < 20; i++) {
-            const insertData = await page.evaluate(() => {
-                const auth : any = document.querySelector("a.FPmhX notranslate nJAzx");
-                const content : any = document.querySelector("div.C4VMK > span");
+            await data.push(result);
 
-                console.log(auth.textContent);
-                console.log(content.textContent);
-                //body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > div.EtaWk > ul > li > div > div > div.C4VMK > span
-            })
-            await page.keyboard.press('ArrowRight');
-            await page.waitForSelector('div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a');
+            await page.keyboard.press("ArrowRight");
+            await page.waitForSelector("div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a");
         }
-
-        const endTime : number = new Date().getTime();
         
-        console.log(endTime-startTime);
+        // await page.waitForSelector("div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.e1e1d > h2 > a");
+        // await page.keyboard.press("ArrowRight");
+
+        const endTime : number = await new Date().getTime();
+        
+        console.log(data);
+        console.log((endTime-startTime)/1000);
 
         // let result = [{ tag: tag, img: items }];
 
