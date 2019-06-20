@@ -7,7 +7,7 @@ const pupperteer = require("puppeteer");
 //   hidden: true,
 // });
 
-const crawler = async url => {
+const naverNewsCrawler = async url => {
   try {
     const browser = await pupperteer.launch({ headless: true });
     const page = await browser.newPage();
